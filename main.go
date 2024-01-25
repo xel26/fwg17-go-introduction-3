@@ -6,4 +6,6 @@ func main() {
 	execute()
 
 	output()
+
+	resultDeret()
 }

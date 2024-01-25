@@ -87,11 +87,12 @@ func (d deretBilangan) prima() string {
 
 // func (d deretBilangan) fibonacci() string {
 // 	var wg sync.WaitGroup
+
 // 	data := make([]int, 10)
 // 	data[0], data[1] = 0, 1
 
-// 	results := "fibonacci: "
-// 	for i := 2; data[i - 1] + data[i - 2] <= d.limit; i++ {
+// 	results := "fibonacci: 0, 1, "
+// 	for i := 2; i < 10 && data[i - 1] + data[i - 2] <= d.limit; i++ {
 // 		wg.Add(1)
 // 		i := i
 // 		go func () {
@@ -106,18 +107,29 @@ func (d deretBilangan) prima() string {
 // }
 
 
+
 func (d deretBilangan) fibonacci() string {
-	data := make([]int, 10)
-	data[0], data[1] = 0, 1
+	var wg sync.WaitGroup
+	x, y := 0, 1
 
-	results := "fibonacci: 0, 1, "
-	for i := 2; data[i - 1] + data[i - 2] <= d.limit; i++ {
-		data[i] = data[i - 1] + data[i -2]
-		results += fmt.Sprintf("%v, ", data[i])		
+	results := "fibonacci test: "
+	for i := 0; x < d.limit; i++ {
+		wg.Add(1)
 
+		go func (x int, y int)  {
+			defer wg.Done()
+			results += fmt.Sprintf("%v, ", x)	
+		}(x, y)
+
+		x, y = y, x+y
+		
 	}
+
+	wg.Wait()
 	return results
 }
+
+
 
 
 

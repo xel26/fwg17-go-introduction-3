@@ -16,30 +16,18 @@ func fibonacci(ch chan<- int, n int){
 
 	for i := 0; i < n; i++ {
 		wg.Add(1)
-		go func ()  {
+
+		go func (x int, y int)  {
 			defer wg.Done()
-				ch <- x // mengirim data ke channel
-				x, y = y, x+y
-		}()
+			ch <- x // mengirim data ke channel
+		}(x, y)
+		
+		x, y = y, x+y
 	}
 
 	wg.Wait()
+	close(ch)
 }
-
-
-
-
-// func fibonacci(ch chan<- int){
-
-// 	data := make([]int, 10)
-// 	data[0], data[1] = 0, 1
-
-// 	for i := 2; data[i - 1] + data[i - 2] <= 40; i++ {
-// 		i := i
-// 		data[i] = data[i - 1] + data[i -2]
-// 		ch <- data[i] // mengirim data ke channel
-// 	}
-// }
 
 
 
@@ -47,22 +35,18 @@ func fibonacci(ch chan<- int, n int){
 func GanjilGenap(ch <-chan int){
 	var wg sync.WaitGroup
 
-
-	prosessFilter := func(num int)bool{
-		return num % 2 == 0
-	}
-
-	data :=[]int{<- ch} // menerima data fibonacci dari channel
-
-	
-	for _, v := range data{
+	for v := range ch{
 		wg.Add(1)
 		v := v
 
 		go func ()  {
 			defer wg.Done()
-			result := prosessFilter(v)
-			fmt.Println("ganjil", result)
+
+			if v % 2 == 0 {
+				fmt.Printf("fibonacci genap %v \n", v)
+			}else{
+				fmt.Printf("fibonacci ganjil %v\n", v)
+			}
 		}()
 	}
 
