@@ -15,10 +15,10 @@ func result(){
 
 	chn := make(chan int)//membuat channel
 
-	go sum(a[:len(a)/2], chn)//[0:4] => [7 10 2 34] slice reference
-	go sum(a[len(a)/2:], chn)//[4:0] => [33, -12, -8, 4] slice reference
+	go sum(a[:len(a)/2], chn)//[:4] => [7 10 2 34] slice reference
+	go sum(a[len(a)/2:], chn)//[4:] => [33, -12, -8, 4] slice reference
 
-	y, x := <-chn, <-chn // menerima value dari channel dan value di assign ke x dan y -------- channel mengirim data
+	x, y := <-chn, <-chn // menerima value dari channel dan value di assign ke x dan y -------- channel mengirim data
 
 	fmt.Printf("x: %v, y: %v, x+y: %v", x, y, x+y)
 	fmt.Println()

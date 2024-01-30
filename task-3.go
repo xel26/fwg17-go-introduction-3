@@ -1,3 +1,5 @@
+// requirements : goroutine, waitgroup, buffer channel, close
+
 package main
 
 import (

@@ -32,8 +32,11 @@ func fibonacci(ch chan<- int, n int){
 
 
 
-func GanjilGenap(ch <-chan int){
+func GanjilGenap(ch <-chan int)(string, string){
 	var wg sync.WaitGroup
+
+	var fibGanjil string
+	var fibGenap string
 
 	for v := range ch{
 		wg.Add(1)
@@ -43,14 +46,15 @@ func GanjilGenap(ch <-chan int){
 			defer wg.Done()
 
 			if v % 2 == 0 {
-				fmt.Printf("fibonacci genap %v \n", v)
+				fibGenap += fmt.Sprintf("%v, ", v)
 			}else{
-				fmt.Printf("fibonacci ganjil %v\n", v)
+				fibGanjil += fmt.Sprintf("%v, ", v)
 			}
 		}()
 	}
 
 	wg.Wait()
+	return fibGanjil, fibGenap
 }
 
 
@@ -58,5 +62,7 @@ func output(){
 	chn := make(chan int, 10)
 
 	fibonacci(chn, cap(chn))
-	GanjilGenap(chn)
+	fibGanjil, fibGenap := GanjilGenap(chn)
+	fmt.Println("fibonacci ganjil:" , fibGanjil)
+	fmt.Println("fibonacci genap:" , fibGenap)
 }

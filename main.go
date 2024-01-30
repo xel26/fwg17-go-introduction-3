@@ -1,11 +1,11 @@
 package main
 
 func main() {
-	result()
+	// result()
 
 	execute()
 
-	output()
+	// output()
 
-	resultDeret()
+	// resultDeret()
 }

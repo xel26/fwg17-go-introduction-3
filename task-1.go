@@ -11,58 +11,72 @@ type deretBilangan struct {
 
 
 
-func (d deretBilangan) ganjil() string {
+func (d deretBilangan) ganjil() (string, int) {
 	var wg sync.WaitGroup
 
 	data := "ganjil: "
+	count := 0
+
 	for i := 1; i <= d.limit; i++ {
 		wg.Add(1)
+
 		i := i
+
 		go func ()  {
 			defer wg.Done()
 			if i % 2 != 0 {
 				data += fmt.Sprintf("%v ", i)
+				count += 1
 			}		
 		}()
 	}
 
 	wg.Wait()
-	return data
+	return data, count
 }
 
 
 
 
-func (d deretBilangan) genap() string {
+func (d deretBilangan) genap() (string, int) {
 	var wg sync.WaitGroup
 
 	data := "genap: "
+	count := 0
+
 	for i := 1; i <= d.limit; i++ {
 		wg.Add(1)
+
 		i := i
+
 		go func ()  {
 			defer wg.Done()
 			if i % 2 == 0 {
 				data += fmt.Sprintf("%v, ", i)
+				count += 1
 			}
 		
 		}()
 	}
 
 	wg.Wait()
-	return data
+	return data, count
 }
 
 
 
 
-func (d deretBilangan) prima() string {
+func (d deretBilangan) prima() (string, int) {
 	var wg sync.WaitGroup
 
 	data := "prima: "
+	count := 0
+
 	for i := 2; i <= d.limit; i++ {
 		wg.Add(1)
+
 		i := i
+
 		faktor := []int{}
 		go func ()  {
 			defer wg.Done()
@@ -74,59 +88,39 @@ func (d deretBilangan) prima() string {
 	
 			if len(faktor) == 2{
 				data += fmt.Sprintf("%v ,", i)
+				count += 1
 			}
 		}()
 
 	}
 		wg.Wait()
-		return data
+		return data, count
 	}
 
 
 
-
-// func (d deretBilangan) fibonacci() string {
-// 	var wg sync.WaitGroup
-
-// 	data := make([]int, 10)
-// 	data[0], data[1] = 0, 1
-
-// 	results := "fibonacci: 0, 1, "
-// 	for i := 2; i < 10 && data[i - 1] + data[i - 2] <= d.limit; i++ {
-// 		wg.Add(1)
-// 		i := i
-// 		go func () {
-// 			defer wg.Done()
-// 			data[i] = data[i - 1] + data[i -2]
-// 			results += fmt.Sprintf("%v, ", data[i])		
-// 		}()
-// 	}
-
-// 	wg.Wait()
-// 	return results
-// }
-
-
-
-func (d deretBilangan) fibonacci() string {
+func (d deretBilangan) fibonacci() (string, int) {
 	var wg sync.WaitGroup
 	x, y := 0, 1
 
-	results := "fibonacci test: "
+	results := "fibonacci: "
+	count := 0
+
 	for i := 0; x < d.limit; i++ {
 		wg.Add(1)
 
 		go func (x int, y int)  {
 			defer wg.Done()
-			results += fmt.Sprintf("%v, ", x)	
+			results += fmt.Sprintf("%v, ", x)
+			count += 1
 		}(x, y)
-
+			
 		x, y = y, x+y
 		
 	}
 
 	wg.Wait()
-	return results
+	return results, count
 }
 
 
@@ -146,22 +140,26 @@ func execute() {
 	
 	go func(){
 		defer wg.Done()//menguarangi nilai counter
-		fmt.Println(deret.ganjil())
+		ganjil, countGanjil := deret.ganjil()
+		fmt.Println(ganjil, "banyak data: ", countGanjil)
 	}()
 
 	go func(){
 		defer wg.Done()
-		fmt.Println(deret.genap())
+		genap, countGenap := deret.genap()
+		fmt.Println(genap, "banyak data: ", countGenap)
 	}()
 
 	go func(){
 		defer wg.Done()
-		fmt.Println(deret.prima())
+		prima, countPrima := deret.prima()
+		fmt.Println(prima, "banyak data: ", countPrima)
 	}()
 
 	go func(){
 		defer wg.Done()
-		fmt.Println(deret.fibonacci())
+		fib, countFib := deret.fibonacci()
+		fmt.Println(fib, "banyak data: ", countFib)
 	}()
 
 	//menahan eksekusi program sampai nilai counter 0
